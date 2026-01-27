@@ -1,0 +1,3 @@
+timestamp,model_name,index_type,k,chunk_size,overlap,build_time_sec,num_chunks,recall@k_dense,recall@k_bm25
+2025-12-10T13:45:31.647487,sentence-transformers/all-MiniLM-L6-v2,faiss_flat_ip,5,280,40,3.1449241638183594,200,5.0,4.333333333333333
+2025-12-10T13:45:31.795370,sentence-transformers/all-MiniLM-L6-v2,faiss_flat_ip,5,280,40,3.530623435974121,200,5.0,4.333333333333333

@@ -1,0 +1,110 @@
+[
+  {
+    "id": "kb001",
+    "title": "LLM — definicja",
+    "content": "Large Language Model (LLM) to model generatywny uczony na dużych zbiorach tekstu do przewidywania kolejnych tokenów.",
+    "tags": [
+      "llm",
+      "definicja"
+    ]
+  },
+  {
+    "id": "kb002",
+    "title": "Token",
+    "content": "Token to jednostka tekstu widziana przez model, często fragment słowa lub znak.",
+    "tags": [
+      "token",
+      "podstawy"
+    ]
+  },
+  {
+    "id": "kb003",
+    "title": "Okno kontekstu",
+    "content": "Okno kontekstu to maksymalna liczba tokenów wejścia i wyjścia rozpatrywana jednocześnie.",
+    "tags": [
+      "kontekst",
+      "limity"
+    ]
+  },
+  {
+    "id": "kb004",
+    "title": "Sampling — temperature",
+    "content": "Temperature skaluje logity przed softmaxem i reguluje losowość wyboru tokenów.",
+    "tags": [
+      "sampling",
+      "temperature"
+    ]
+  },
+  {
+    "id": "kb005",
+    "title": "RAG — idea",
+    "content": "RAG łączy wyszukiwanie w korpusie wiedzy z generacją, dostarczając modelowi kontekst.",
+    "tags": [
+      "rag",
+      "retrieval"
+    ]
+  },
+  {
+    "id": "kb006",
+    "title": "Embedding",
+    "content": "Embedding to wektorowa reprezentacja semantyki tekstu; podobieństwo mierzymy np. kosinusem.",
+    "tags": [
+      "embedding",
+      "wektory"
+    ]
+  },
+  {
+    "id": "kb007",
+    "title": "JSON output",
+    "content": "Wymuszanie formatu JSON ułatwia automatyczną walidację i integrację.",
+    "tags": [
+      "json",
+      "structured-output"
+    ]
+  },
+  {
+    "id": "kb008",
+    "title": "Prompt injection",
+    "content": "Ataki próbują wymusić na modelu złamanie zasad. Stosuj least-privilege i filtrację argumentów narzędzi.",
+    "tags": [
+      "security",
+      "injection"
+    ]
+  },
+  {
+    "id": "kb009",
+    "title": "Function Calling",
+    "content": "Model zwraca strukturę narzędzia i argumentów; backend wykonuje funkcję i składa odpowiedź.",
+    "tags": [
+      "tools",
+      "function-calling"
+    ]
+  },
+  {
+    "id": "kb010",
+    "title": "Koszty tokenów",
+    "content": "Tokeny = koszt. Kontroluj max_new_tokens, cache’uj embeddingi i używaj krótszych kontekstów.",
+    "tags": [
+      "koszt",
+      "optymalizacja"
+    ]
+  },
+  {
+    "id": "kb011",
+    "title": "RAG - testowe",
+    "content": "RAG łączy wyszukiwanie w korpusie wiedzy z generacją, dostarczając modelowi kontekst.",
+    "tags": [
+      "rag",
+      "retrieval"
+    ]
+  },
+    {
+    "id": "kb012",
+    "title": "Embedding v2",
+    "content": "Embeddingów używamy do reprezentowania tekstu (np. słów, zdań, dokumentów) jako wektorów liczbowych, żeby modele mogły porównywać znaczenie i wykorzystywać to m.in. w wyszukiwaniu semantycznym, klasteryzacji, rekomendacjach i podobnych zadaniach.",
+    "tags": [
+      "embedding",
+      "wektory"
+    ]
+  }
+]

@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pydantic
+requests
+python-dotenv
+sentence-transformers
+faiss-cpu
+numpy
+func_timeout
+openai
+greenlet
+pytest
+httpx
