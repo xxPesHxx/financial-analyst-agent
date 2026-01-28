@@ -5,12 +5,10 @@ from pydantic import BaseModel, ValidationError, Field
 from app.guardrails import SecurityError
 from app import tools
 
-# Setup logging
 logging.basicConfig(filename='app.log', level=logging.INFO, 
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Argument Schemas
 class StockArgs(BaseModel):
     ticker: str = Field(..., description="Stock ticker symbol (e.g. AAPL)")
 
@@ -44,14 +42,12 @@ class ToolRegistry:
         func = tool_def["func"]
         schema = tool_def["schema"]
         
-        # Validate args
         try:
             validated_args = schema(**args)
         except ValidationError as e:
             logger.error(f"Validation error for {tool_name}: {e}")
             raise ValueError(f"Validation error: {e}")
             
-        # Execute with timeout
         try:
             with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
                 future = executor.submit(func, **validated_args.model_dump()) 
@@ -66,11 +62,8 @@ class ToolRegistry:
             raise e
         except Exception as e:
             logger.error(f"Execution error in {tool_name}: {e}")
-            # The prompt says handle validation errors gracefully (no stack traces).
-            # The API level should catch this and return a nice message.
             raise RuntimeError(f"Tool execution failed: {str(e)}")
 
-# Global Registry
 registry = ToolRegistry()
 registry.register("get_stock_price", tools.get_stock_price, StockArgs)
 registry.register("technical_analysis_forecast", tools.technical_analysis_forecast, AnalysisArgs)

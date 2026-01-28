@@ -3,9 +3,8 @@ import os
 import sys
 
 def run_evaluation():
-    print("Running evaluation...")
+    print("Rakieta startuje...")
     
-    # Run pytest and capture results using a simple plugin
     class ReportPlugin:
         def __init__(self):
             self.passed = 0
@@ -22,41 +21,37 @@ def run_evaluation():
                     self.failed += 1
 
     plugin = ReportPlugin()
-    # Run tests in tests/test_main.py
-    # -q: quiet
     ret_code = pytest.main(["-q", "tests/test_main.py"], plugins=[plugin])
     
     total = plugin.passed + plugin.failed
     success_rate = (plugin.passed / total * 100) if total > 0 else 0
     
-    report_content = f"""# Evaluation Report
+    report_content = f"""# Raport z ewaluacji
 
-**Total Tests:** {total}
-**Passed:** {plugin.passed}
-**Failed:** {plugin.failed}
-**Success Rate:** {success_rate:.2f}%
+**Testy:** {total}
+**Zaliczone:** {plugin.passed}
+**Niezaliczone:** {plugin.failed}
+**Współczynnik sukcesu:** {success_rate:.2f}%
 
-## Detailed Results
+## Wyniki
 | Test ID | Status |
 | :--- | :--- |
 """
     for nodeid, status in plugin.results:
-        # Clean up nodeid
         name = nodeid.split("::")[-1]
         report_content += f"| {name} | {status} |\n"
 
-    # Observability check: Check if app.log exists and has entries
     if os.path.exists("app.log"):
         with open("app.log", "r") as f:
             log_lines = len(f.readlines())
-        report_content += f"\n## Observability\nApp log contains {log_lines} entries.\n"
+        report_content += f"\n## Obserwowalność\nLogi aplikacji zawierają {log_lines} wpisów.\n"
     else:
-        report_content += "\n## Observability\nApp log not found (could be due to no traffic yet).\n"
+        report_content += "\n## Obserwowalność\nLogi aplikacji nie zostały znalezione (może być spowodowane brakiem ruchu).\n"
 
-    with open("evaluation_report.md", "w") as f:
+    with open("raport.md", "w") as f:
         f.write(report_content)
     
-    print(f"Evaluation complete. Report saved to evaluation_report.md. Success rate: {success_rate:.2f}%")
+    print(f"Ewaluacja zakończona. Raport zapisany do raport.md. Współczynnik sukcesu: {success_rate:.2f}%")
 
 if __name__ == "__main__":
     run_evaluation()

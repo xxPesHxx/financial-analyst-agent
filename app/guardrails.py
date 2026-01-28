@@ -17,14 +17,12 @@ def detect_injection(text: str) -> bool:
     return any(re.search(p, text.lower()) for p in INJECTION_PATTERNS)
 
 def validate_ticker(ticker: str) -> bool:
-    # Allowlist: Ensure tools only accept valid stock tickers (3-5 uppercase letters)
     match = re.match(r'^[A-Z]{3,5}$', ticker)
     if not match:
         raise SecurityError(f"Invalid ticker format: {ticker}")
     return True
 
 def validate_output(text: str) -> bool:
-    # Basic check for restricted data in output
     RESTRICTED_KEYWORDS = ["CONFIDENTIAL", "SECRET_KEY", "password"]
     for keyword in RESTRICTED_KEYWORDS:
         if keyword in text:

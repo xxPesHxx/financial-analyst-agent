@@ -17,4 +17,4 @@
 | test_path_traversal_heuristic | PASS |
 
 ## Observability
-App log contains 2230 entries.
+App log contains 3137 entries.

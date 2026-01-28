@@ -1,25 +1,34 @@
-Tesla ogłasza przełom w technologii baterii, zwiększając zasięg o 20%.
-Apple prezentuje iPhone 16 z funkcjami holograficznymi.
-Bitcoin osiąga nowe ATH na poziomie 100 000 USD w obliczu regulacji.
-Amazon rozszerza dostawy dronami na 50 nowych miast w Europie.
-Nowy model Gemini od Google przewyższa GPT-4 w zadaniach logicznych.
-Rezerwa Federalna ogłasza obniżkę stóp procentowych o 0.5% dla stymulacji gospodarki.
-SpaceX z sukcesem ląduje boosterem Starship na wieży startowej.
-Akcje NVidia szybują w górę dzięki niesłabnącemu popytowi na AI.
-Microsoft integruje Copilot ze wszystkimi systemami Windows 12 domyślnie.
-Coca-Cola wprowadza nowy smak generowany przez AI, dostępny limitowanie.
-Orlen inwestuje 5 mld PLN w morskie farmy wiatrowe na Bałtyku.
-CD Projekt Red zapowiada Wiedźmina 4 na silniku Unreal Engine 5 z premierą w 2026.
-Intel buduje fabrykę w okolicach Wrocławia, tworząc 2000 miejsc pracy.
-Kurs EUR/PLN spada poniżej 4.20 dzięki napływowi funduszy KPO.
-PKO BP ogłasza rekordowe zyski za III kwartał dzięki wysokim stopom procentowym.
-KGHM odkrywa nowe złoża miedzi w Chile, szacowane na 10 mln ton.
-Inflacja w strefie Euro spada do celu 2%, EBC rozważa poluzowanie polityki.
-Szwedzka firma Northvolt ogłasza bankructwo, wstrząsając rynkiem baterii w UE.
-Meta wprowadza okulary AR, które zastępują smartfony w 40% zastosowań.
-Allegro przejmuje lokalnego konkurenta w Czechach, umacniając pozycję w regionie.
-Złoto przebija barierę 2500 USD za uncję w obliczu napięć geopolitycznych.
-Ropa Brent drożeje do 90 USD po decyzji OPEC+ o cięciu wydobycia.
-OpenAI ogłasza partnerstwo z rządem USA w zakresie bezpieczeństwa AI.
-Toyota prezentuje silnik wodorowy nowej generacji o sprawności 50%.
-Unia Europejska wprowadza nowe cła na chińskie samochody elektryczne.
+Tesla reveals breakthrough in battery technology, increasing range by 20%.
+Apple unveils iPhone 16 with holographic features.
+Bitcoin achieves new ATH at $100,000 USD amid regulations.
+Amazon expands drone deliveries to 50 new cities in Europe.
+New Gemini model from Google outperforms GPT-4 in logic tasks.
+Federal Reserve announces interest rate cut of 0.5% for economic stimulus.
+SpaceX successfully lands Starship booster on launchpad.
+NVIDIA stocks soar on strong AI chip demand.
+Microsoft integrates Copilot into all Windows 12 systems by default.
+Coca-Cola introduces AI-generated flavor, available in limited markets.
+Orlen invests 5 billion PLN in Baltic offshore wind farms.
+CD Projekt Red announces Witcher 4 on Unreal Engine 5 with 2026 launch.
+Intel builds factory in Wrocław, creating 2,000 jobs.
+EUR/PLN drops below 4.20 due to KPO fund inflow.
+PKO BP announces record III Q earnings thanks to high interest rates.
+KGHM discovers new copper deposits in Chile, estimated at 10 million tons.
+Eurozone inflation falls to 2%, ECB considers easing policy.
+Northvolt declares bankruptcy, shaking EU battery market.
+Meta releases AR glasses, replacing smartphones in 40% of use cases.
+Allegro acquires local competitor in Czech Republic, strengthening its position in the region.
+Gold breaks through $2,500 per ounce amid geopolitical tensions.
+Brent crude climbs to $90 per barrel after OPEC+ decision to cut production.
+OpenAI announces partnership with US government in AI safety.
+Toyota unveils hydrogen-powered engine with 50% efficiency.
+European Union implements new regulations on Chinese electric vehicles.
+Apple faces significant supply chain disruptions in Vietnam due to unexpected power outages. Analysts predict a delay in iPhone 16 shipments by at least 3 weeks.
+Tesla announces a breakthrough in solid-state battery technology. CEO Elon Musk claims the new "Model 2" will have a 500-mile range and cost under $25,000.
+The Federal Reserve signals that interest rates might remain high for longer than expected to combat sticky inflation. This has caused a minor sell-off in the S&P 500 index.
+Amazon is under new investigation by the FTC regarding monopolistic practices in its cloud computing division (AWS). The stock dropped 2% in pre-market trading.
+NVIDIA reports record-breaking quarterly earnings, beating expectations by 15%. Demand for AI chips remains at an all-time high, driving the stock to new peaks.
+Bitcoin (BTC) surges past $70,000 as rumors of a new spot ETF approval by the SEC gain traction. Institutional interest in crypto is rising again.
+Microsoft (MSFT) integrates GPT-5 directly into Windows 12. Early reviews suggest it significantly boosts productivity, giving MSFT a strong edge over Google.
+GameStop (GME) sees unusual volatility driven by retail investors on Reddit, despite no fundamental news changing for the company.
+Netflix announces price hikes in US and Europe to fund new content production. Shares jump 5% on the news.

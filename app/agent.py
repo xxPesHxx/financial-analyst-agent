@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 class Agent:
     def __init__(self):
         self.api_key = os.getenv("OPENAI_API_KEY")
-        # Check if API Key is valid
         is_empty = not self.api_key
         is_template = self.api_key and self.api_key.startswith("sk-...") or self.api_key == "sk-..."
         
@@ -31,18 +30,21 @@ class Agent:
             print(f"DEBUG: Live Mode ON. Key: {masked_key}")
 
     def run(self, query: str) -> AskResponse:
-        # 1. Guardrails Input
+
         if detect_injection(query):
             logger.warning(f"Prompt injection detected: {query}")
             raise SecurityError("Prompt injection detected")
 
-        # 2. RAG
         context_docs = rag_engine.retrieve(query, top_k=2)
-        # Format context with metadata
         context_str = "\n".join([f"[{d['meta']['source']}#{d['meta']['chunk_id']}] {d['content']}" for d in context_docs])
         
-        system_prompt = f"""You are a Financial Analyst Agent.
-        Use the available tools to answer questions about stock prices, technical analysis, and RSI.
+        system_prompt = f"""Jesteś asystentem do analizy danych finansowych.
+        WAŻNE: Nie jesteś doradcą finansowym. Twoje odpowiedzi służą wyłącznie celom edukacyjnym i informacyjnym.
+        Nigdy nie rekomenduj zakupu ani sprzedaży akcji.
+        Opieraj się wyłącznie na faktach dostarczonych przez narzędzia i kontekst RAG.
+        Unikaj języka sugerującego pewność zysku.
+        
+        Używaj dostępnych narzędzi, aby odpowiadać na pytania o ceny akcji, analizę techniczną i RSI.
         
         Relevant Financial News:
         {context_str}
@@ -53,15 +55,12 @@ class Agent:
             {"role": "user", "content": query}
         ]
 
-        # 3. LLM Call (Decide Tool)
         response_msg = self._call_llm(messages, tools=self._get_tool_definitions())
         
         tool_calls_result = []
         answer = ""
 
-        # 4. Handle Function Calling
         if response_msg.get("tool_calls"):
-            # Handle the first tool call for this exercise
             tool_call = response_msg["tool_calls"][0] 
             tool_name = tool_call["function"]["name"]
             
@@ -71,19 +70,15 @@ class Agent:
                 arguments = {}
                 logger.error("Failed to parse tool arguments JSON")
 
-            # Execute
             try:
                 result = registry.dispatch(tool_name, arguments)
                 tool_output = json.dumps(result)
             except Exception as e:
                 tool_output = f"Error: {str(e)}"
                 logger.error(f"Tool execution error: {e}")
-            
-            # Record tool call for API response
+        
             tool_calls_result.append(ToolCallSchema(tool=tool_name, args=arguments))
             
-            # Append to history
-            # Convert response_msg back to message format if needed, but here we just need to append the assistant's intent
             messages.append({"role": "assistant", "content": response_msg.get("content"), "tool_calls": response_msg.get("tool_calls")})
             messages.append({
                 "role": "tool", 
@@ -92,7 +87,6 @@ class Agent:
                 "content": tool_output
             })
             
-            # 5. Final Answer
             final_response = self._call_llm(messages)
             answer = final_response["content"]
         else:
@@ -101,7 +95,6 @@ class Agent:
         if not answer:
             answer = "I executed the tool but could not generate a response."
 
-        # 6. Guardrails Output
         try:
             validate_output(answer)
         except SecurityError as e:
@@ -130,11 +123,9 @@ class Agent:
         if self.mock_mode:
             return self._mock_llm(messages, tools)
         
-        # Check if it's a Google Key
         if self.api_key.startswith("AIza"):
             return self._call_gemini(messages, tools)
             
-        # Default to OpenAI
         try:
             from openai import OpenAI
             client = OpenAI(api_key=self.api_key)
@@ -171,24 +162,11 @@ class Agent:
             import google.generativeai as genai
             genai.configure(api_key=self.api_key)
             
-            # Convert tools to Gemini format
             gemini_tools = []
             if tools:
-                # Gemini expects a specific tool format (FunctionDeclarations)
-                # But for simplicity in this wrapper, we can use the 'tools' argument dynamically if supported 
-                # or just instruct the model via prompt if function calling is complex to map.
-                # However, Gemini 1.5/Pro supports tools natively.
-                
-                # We need to map OpenAI tool schema to Gemini 'tools' list
-                # This is non-trivial to do perfectly without extra mapping code.
-                # Since the user used 'gemini-2.5-flash' in logs, let's try to pass functions.
                 pass 
 
-            # Simplified Gemini Call
-            # We map messages to history
-            # Trying 'gemini-pro' as it is the most stable alias usually
             model_name = 'gemini-2.5-flash' 
-            # Switching to gemini-2.5-flash as seen in user dashboard with 5 RPM limit
             model = genai.GenerativeModel('gemini-2.5-flash') 
             
             chat_history = []
@@ -203,13 +181,9 @@ class Agent:
                     chat_history.append({"role": "user", "parts": [m["content"]]})
                 elif m["role"] == "assistant":
                     chat_history.append({"role": "model", "parts": [m["content"] or ""]})
-            
-            # If tools are needed, we really should use the native tool binding.
-            # But the prompt structure in 'agent.py' relies on OpenAI's JSON tool output.
-            # Gemini returns tool calls differently.
-            
-            # CRITICAL FIX: To avoid complexity, we will instruct Gemini in SYSTEM PROMPT to output JSON tool calls
-            # mimicking OpenAI behavior, because refactoring the entire Agent loop for Gemini Response objects is risky now.
+                elif m["role"] == "tool":
+                    chat_history.append({"role": "user", "parts": [f"Tool Context/Result: {m['content']}"]})
+
             
             if tools:
                 tool_descriptions = json.dumps(tools, indent=2)
@@ -217,19 +191,25 @@ class Agent:
                 system_instruction += "To call a tool, verify you must use it. If yes, output ONLY valid JSON using this schema: {\"tool_calls\": [{\"id\": \"call_...\", \"function\": {\"name\": \"...\", \"arguments\": \"{...}\"}}]}\n"
                 system_instruction += "If no tool is needed, just answer normally."
 
-            # We use generate_content on the model
-            # Note: system_instruction is supported in newer SDK versions
-            model = genai.GenerativeModel('gemini-2.5-flash', system_instruction=system_instruction)
-            
-            # Create chat session from history (excluding last message)
+            from google.generativeai.types import HarmCategory, HarmBlockThreshold
+            safety_settings = {
+                HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+                HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+                HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+                HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+            }
+
+            model = genai.GenerativeModel(
+                model_name='gemini-2.5-flash', 
+                system_instruction=system_instruction,
+                safety_settings=safety_settings
+            )
             chat = model.start_chat(history=chat_history[:-1] if len(chat_history) > 0 else [])
             response = chat.send_message(last_user_msg)
             
             text = response.text
             
-            # Check for our fake JSON tool call
             try:
-                # Naive implementation to parse the JSON we asked for
                 import re
                 json_match = re.search(r'\{.*"tool_calls".*\}', text, re.DOTALL)
                 if json_match:
@@ -251,19 +231,29 @@ class Agent:
         if last_msg["role"] == "user":
             content = last_msg["content"].lower()
             
-            # Simple keyword matching
             if tools:
                 matched_tool = None
                 args = {}
                 
-                # Extract potential ticker (uppercase word > 2 chars)
-                ticker = "AAPL"
-                for w in last_msg["content"].split(): # Use original case for extraction
-                    clean_w = w.strip(".,!?")
-                    if clean_w.isupper() and len(clean_w) >= 3:
+                from app.guardrails import validate_ticker, SecurityError
+                ticker = None
+                
+                words = last_msg["content"].split()
+                for w in words:
+                    clean_w = w.strip(".,!?\"'")
+                    try:
+                        validate_ticker(clean_w)
                         ticker = clean_w
                         break
+                    except SecurityError:
+                        continue
+                
+                if not ticker and ("../../" in content or "drop table" in content):
+                     return {"content": "Blocked: Invalid ticker format or malicious input detected."}
 
+                if not ticker:
+                    ticker = "AAPL"
+                
                 if ("price" in content or "cena" in content or "kurs" in content) and "get_stock_price" in registry.list_tools():
                     matched_tool = "get_stock_price"
                     args = {"ticker": ticker}
@@ -286,18 +276,22 @@ class Agent:
                         }]
                     }
         
-            # If no tool matched, check if we have RAG context in system prompt to fake an answer
             system_instruction = next((m["content"] for m in messages if m["role"] == "system"), "")
-            if "Relevant Financial News" in system_instruction and len(system_instruction) > 150:
-                return {"content": "Based on the retrieved financial news (Mock Mode): It seems there are significant developments. (Switch to OpenAI Key for real synthesis)"}
+            system_instruction = next((m["content"] for m in messages if m["role"] == "system"), "")
+            news_header = "Relevant Financial News:"
+            if news_header in system_instruction:
+                try:
+                    news_content = system_instruction.split(news_header)[1].strip()
+                    if len(news_content) > 10:
+                        return {"content": f"Based on the retrieved financial news (Mock Mode): \n\n{news_content}\n\n(This is a direct dump/summary of context because real LLM synthesis is disabled)"}
+                except:
+                    pass
 
             return {"content": "I am a Mock Agent. I didn't understand. Try: 'Cena AAPL', 'Analiza TSLA', 'RSI BTC'."}
 
-        # If last role was tool, we generate a final answer
         if last_msg["role"] == "tool":
             tool_res = last_msg["content"]
             try:
-                # Try to parse to make the answer nicer
                 res_dict = json.loads(tool_res)
                 return {"content": f"The result is: {res_dict}. (Mock Answer)"}
             except:

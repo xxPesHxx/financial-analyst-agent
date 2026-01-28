@@ -5,7 +5,6 @@ from app.agent import Agent
 from app.guardrails import SecurityError
 import logging
 
-# Setup logging
 logging.basicConfig(filename='app.log', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -24,7 +23,6 @@ async def ask(request: AskReq):
         logger.error(f"TimeoutError: {e}")
         return JSONResponse(status_code=408, content={"detail": str(e), "error_type": "TimeoutError"})
     except ValueError as e: 
-        # Often validation errors
         logger.warning(f"ValueError: {e}")
         return JSONResponse(status_code=400, content={"detail": str(e), "error_type": "ValidationError"})
     except Exception as e:
